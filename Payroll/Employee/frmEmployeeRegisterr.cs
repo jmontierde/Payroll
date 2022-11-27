@@ -42,6 +42,10 @@ namespace Payroll.Employee
         private void frmEmployeeRegisterr_Load(object sender, EventArgs e) // Form for Employee Register
         {
             this.ActiveControl = txtName;
+            LoadData();
+            btnSave.Enabled = true;
+            btnUpdate.Enabled = false;
+            btnDelete.Enabled = false;
         }
 
 
@@ -179,11 +183,11 @@ namespace Payroll.Employee
             return result;
         }
 
-        Connection con = new Connection(); // Connection from database
+        Connection con = new Connection(); // Connection to database
 
         private bool IfEmployeeExist(string name, string mobile, string pan)
         {
-            con.dataGet("Select 1 From [Employee] WHERE Name = '" + name + "' AND Mobile ='"+mobile+"' AND PANNo = '"+pan+"' ");
+            con.dataGet("Select 1 From Employee WHERE name = '" + name + "' AND mobile ='" + mobile + "' AND pan = '" + pan + "' ");
             DataTable dt = new DataTable();
             con.sda.Fill(dt);
             if (dt.Rows.Count > 0)
@@ -211,18 +215,19 @@ namespace Payroll.Employee
             {
                 if (IfEmployeeExist(txtName.Text,txtMobile.Text,txtPAN.Text))
                 {
-                    MessageBox.Show("The employee is already exist");
+                    MessageBox.Show("Employee is already exist");
                 }
                 else
                 {
-                    Connection con = new Connection();
-                    con.dataSend(@"INSERT INTO [Employee] (Name, Mobile, Email, PANNo, Birthday, BankDetails, Address, FileName, ImageData)
-                    VALUES ('" + txtName.Text + "', '" + txtMobile.Text + "', '" + txtEmail.Text + "', '" + txtPAN.Text + "', '" + dtpBirthday.Value.ToString("MM/dd/yyyy") + "', '" + txtBank.Text + "','" + txtAddress.Text + "', '" + fileName + "', '" + ConvertImageToBinary(employeePictureBox.Image) + "')");
-                    MessageBox.Show("Successfully Save.","Message",MessageBoxButtons.OK,MessageBoxIcon.Information);
+                    con.dataSend(@"INSERT INTO Employee(name, mobile, email, pan, birthday, bankDetails, address, fileName, imageData)
+                    VALUES('" + txtName.Text + "', '" + txtMobile.Text + "', '" + txtEmail.Text + "', '" + txtPAN.Text + "', '" + dtpBirthday.Value.ToString("MM/dd/yyyy") + "', '" + txtBank.Text + "', '" + txtAddress.Text + "', '" + fileName + "', '" + ConvertImageToBinary(employeePictureBox.Image) + "')");
+                    MessageBox.Show("Successfully Save.", "Message", MessageBoxButtons.OK, MessageBoxIcon.Information);
                     ClearData();
+                    LoadData();
                 }
             }
         }
+
         private void ClearData()
         {
             txtEmpId.Clear();
@@ -234,7 +239,83 @@ namespace Payroll.Employee
             txtBank.Clear();
             txtAddress.Clear();
             employeePictureBox.Image = null;
+            btnSave.Enabled = true;
+            btnUpdate.Enabled = false;
+            btnDelete.Enabled = false;      
 
+        }
+
+        private void LoadData()
+        {
+            con.dataGet("SELECT * FROM Employee");
+            DataTable dt = new DataTable();
+            con.sda.Fill(dt);
+            dataGridView1.Rows.Clear();
+            foreach (DataRow row in dt.Rows)
+            {
+                int n = dataGridView1.Rows.Add();
+                dataGridView1.Rows[n].Cells["dg_EmpID"].Value = row["employeeId"].ToString(); 
+                dataGridView1.Rows[n].Cells["dg_name"].Value = row["name"].ToString();
+                dataGridView1.Rows[n].Cells["dg_birthday"].Value = Convert.ToDateTime(row["birthday"].ToString()).ToString("dd/MM/yyyy");
+                dataGridView1.Rows[n].Cells["dg_email"].Value = row["email"].ToString();
+                dataGridView1.Rows[n].Cells["dg_mobile"].Value = row["mobile"].ToString();
+                dataGridView1.Rows[n].Cells["dg_pan"].Value = row["pan"].ToString();
+                dataGridView1.Rows[n].Cells["dg_bankDetails"].Value = row["bankDetails"].ToString();
+                dataGridView1.Rows[n].Cells["dg_address"].Value = row["address"].ToString();
+                dataGridView1.Rows[n].Cells["dg_fileName"].Value = row["fileName"].ToString();
+                dataGridView1.Rows[n].Cells["dg_image"].Value = row["imageData"].ToString();
+
+            }
+        }
+
+        // Para ma open lahat ng data sa textbox
+        private void dataGridView1_MouseDoubleClick(object sender, MouseEventArgs e)
+        {
+            txtEmpId.Text = dataGridView1.SelectedRows[0    ].Cells["dg_EmpID"].Value.ToString();
+            txtName.Text = dataGridView1.SelectedRows[0].Cells["dg_name"].Value.ToString();
+            txtMobile.Text = dataGridView1.SelectedRows[0].Cells["dg_mobile"].Value.ToString();
+            txtEmail.Text = dataGridView1.SelectedRows[0].Cells["dg_email"].Value.ToString();
+            txtPAN.Text = dataGridView1.SelectedRows[0].Cells["dg_pan"].Value.ToString();
+            dtpBirthday.Text = dataGridView1.SelectedRows[0].Cells["dg_birthday"].Value.ToString();
+            txtBank.Text = dataGridView1.SelectedRows[0].Cells["dg_bankDetails"].Value.ToString();
+            txtAddress.Text = dataGridView1.SelectedRows[0].Cells["dg_address"].Value.ToString();
+            lblFileName.Text = dataGridView1.SelectedRows[0].Cells["dg_filename"].Value.ToString();
+            employeePictureBox.Image = Image.FromFile(dataGridView1.SelectedRows[0].Cells["dg_filename"].Value.ToString()); // May kailangan ayusin
+            btnSave.Enabled = false;
+            btnUpdate.Enabled = true;
+            btnDelete.Enabled = true;
+
+
+
+
+        }
+
+        private void btnUpdate_Click(object sender, EventArgs e)
+        {
+            DialogResult dialogResult = MessageBox.Show("Are you sure you want to update your data?", "Update", MessageBoxButtons.YesNo);
+            if (dialogResult == DialogResult.Yes)
+            {
+                con.dataSend("UPDATE Employee SET email = '" + txtEmail.Text + "', bankDetails = '" + txtBank.Text + "', address = '" + txtAddress.Text + "', fileName '" + fileName + "', imageData = '" + ConvertImageToBinary(employeePictureBox.Image) + "' WHERE employeeId = '" + txtEmpId.Text + "' ");
+                MessageBox.Show("Updated Successfully", "Message", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                LoadData();
+                btnSave.Enabled = true;
+                btnUpdate.Enabled = false;
+                btnDelete.Enabled = false;
+            }
+        }
+
+        private void btnDelete_Click(object sender, EventArgs e)
+        {
+            DialogResult dialogResult = MessageBox.Show("Are you sure you want to delete your data?", "Delete", MessageBoxButtons.YesNo);
+            if (dialogResult == DialogResult.Yes)
+            {
+                con.dataSend("DELETE from Employee WHERE employeeId = '" + txtEmpId.Text + "'");
+                MessageBox.Show("Deleted Successfully", "Message", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                LoadData();
+                btnSave.Enabled = true;
+                btnUpdate.Enabled = false;
+                btnDelete.Enabled = false;
+            }
         }
     }
 }

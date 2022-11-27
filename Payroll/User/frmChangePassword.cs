@@ -95,7 +95,7 @@ namespace Payroll.User
             if (result == DialogResult.Yes)
             {
                 Connection con = new Connection();
-                con.dataGet("SELECT 1 FROM Users WHERE username = '" + txtUsername.Text + "' AND password = '" + txtOldPassword.Text + "' ");
+                con.dataGet("SELECT 1 FROM User WHERE username = '" + txtUsername.Text + "' AND password = '" + txtOldPassword.Text + "' ");
                 DataTable dt = new DataTable();
                 con.sda.Fill(dt);
                 if (dt.Rows.Count > 0)
@@ -104,7 +104,7 @@ namespace Payroll.User
                     {
                         if(txtNewPassword.Text.Length > 3)
                         {
-                            con.dataSend("UPDATE Users SET password = '"+txtNewPassword.Text+"' WHERE username = '"+txtUsername.Text+"' AND password = '"+txtOldPassword.Text+"' ");
+                            con.dataSend("UPDATE User SET password = '"+txtNewPassword.Text+"' WHERE username = '"+txtUsername.Text+"' AND password = '"+txtOldPassword.Text+"' ");
                             MessageBox.Show("Password successfully changed", "Message", MessageBoxButtons.OK, MessageBoxIcon.Information);
                         }
                         else

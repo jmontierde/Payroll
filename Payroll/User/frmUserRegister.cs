@@ -110,7 +110,7 @@ namespace Payroll.User
         private bool FindUserAccount(string userName)
         {
            
-            con.dataGet("Select 1 From [Users] WHERE [username] = '" + userName +"'");
+            con.dataGet("Select 1 From [User] WHERE username = '" + userName +"'");
             DataTable dt = new DataTable();
             con.sda.Fill(dt);
             if(dt.Rows.Count > 0)
@@ -135,7 +135,7 @@ namespace Payroll.User
                 else
                 {
                     Connection con = new Connection();  
-                    con.dataSend("INSERT INTO Users(name, email, username, password, position, birthday, address)VALUES('"+employee_name.Text+"', '"+employee_email.Text+"', '"+employee_username.Text+"', '"+employee_password+"', '"+employee_position.Text+"', '"+employee_birthday.Value.ToString("yyyy/MM/dd") +"', '"+employee_address.Text+"' )");
+                    con.dataSend("INSERT INTO [User](name, email, username, password, position, birthday, address)VALUES('"+employee_name.Text+"', '"+employee_email.Text+"', '"+employee_username.Text+"', '"+employee_password+"', '"+employee_position.Text+"', '"+employee_birthday.Value.ToString("yyyy/MM/dd") +"', '"+employee_address.Text+"' )");
                     MessageBox.Show("Record has been successfully saved.");
                     clearData();
                     LoadData();
@@ -145,7 +145,7 @@ namespace Payroll.User
       
         private void LoadData()
         {
-            con.dataGet("SELECT * FROM [Users]");
+            con.dataGet("SELECT * FROM [User]");
             DataTable dt = new DataTable();
             con.sda.Fill(dt);
             dataGridView1.Rows.Clear();
@@ -185,10 +185,10 @@ namespace Payroll.User
             DialogResult dialogResult = MessageBox.Show("Are you sure you want to update your data?", "Update", MessageBoxButtons.YesNo);
             if(dialogResult == DialogResult.Yes)
             {
-                con.dataSend("UPDATE Users SET name ='"+employee_name.Text+"', email ='"+employee_email.Text+"', position ='"+employee_position.Text+"', birthday ='"+employee_birthday.Value.ToString("MM/dd/yyyy")+"', address = '"+employee_address.Text+"' WHERE username ='"+employee_username.Text+"'");
+                con.dataSend("UPDATE [User] SET name ='"+employee_name.Text+"', email ='"+employee_email.Text+"', position ='"+employee_position.Text+"', birthday ='"+employee_birthday.Value.ToString("MM/dd/yyyy")+"', address = '"+employee_address.Text+"' WHERE username ='"+employee_username.Text+"'");
                 MessageBox.Show("Updated Successfully", "Message", MessageBoxButtons.OK, MessageBoxIcon.Information);
                 LoadData();
-                register_save.Enabled = true;
+                register_save.Enabled = true;   
                 register_update.Enabled = false;
                 register_delete.Enabled = false;
             }
@@ -196,10 +196,10 @@ namespace Payroll.User
 
         private void register_delete_Click(object sender, EventArgs e)
         {
-            DialogResult dialogResult = MessageBox.Show("Are you sure you want to delete your data?", "Update", MessageBoxButtons.YesNo);
+            DialogResult dialogResult = MessageBox.Show("Are you sure you want to delete your data?", "Delete", MessageBoxButtons.YesNo);
             if (dialogResult == DialogResult.Yes)
             {
-                con.dataSend("DELETE from Users WHERE username = '"+employee_username.Text+"'");
+                con.dataSend("DELETE from [User] WHERE username = '"+employee_username.Text+"'");
                 MessageBox.Show("Deleted Successfully", "Message", MessageBoxButtons.OK, MessageBoxIcon.Information);
                 LoadData();
                 register_save.Enabled = true;

@@ -68,5 +68,54 @@ namespace Payroll
             frmEmployee.StartPosition = FormStartPosition.CenterScreen;
             frmEmployee.Show();
         }
+
+        private void employeeSalaryToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            Employee.frmEmployeeSalary frmSalary = new Employee.frmEmployeeSalary();
+            frmSalary.MdiParent = this;
+            frmSalary.StartPosition = FormStartPosition.CenterScreen;
+            frmSalary.Show();
+        }
+
+        private void toolStripMenuItem1_Click_1(object sender, EventArgs e)
+        {
+
+        }
+
+        private void employeeAttendanceToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            Employee.frmEmployeeAttendance frmAttendance = new Employee.frmEmployeeAttendance();
+            frmAttendance.MdiParent = this;
+            frmAttendance.StartPosition = FormStartPosition.CenterScreen;
+            frmAttendance.Show();
+        }
+
+        private void attendanceViewToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            Employee.frmViewAttendance frmViewAttendance = new Employee.frmViewAttendance();
+            frmViewAttendance.MdiParent = this;
+            IsMdiContainer = true;
+            frmViewAttendance.StartPosition = FormStartPosition.CenterScreen;
+            frmViewAttendance.Show();
+        }
+
+        private void employeeToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void MainForm_Load(object sender, EventArgs e)
+        {
+
+        }
+
+        private void salaryProcessToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            Employee.frmSalaryProcess frmSalaryProcess = new Employee.frmSalaryProcess();
+            frmSalaryProcess.MdiParent = this;
+            IsMdiContainer = true;
+            frmSalaryProcess.StartPosition = FormStartPosition.CenterScreen;
+            frmSalaryProcess.Show();
+        }
     }
 }

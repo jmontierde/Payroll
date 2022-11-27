@@ -20,7 +20,7 @@ namespace Payroll
         private void btn_login_Click(object sender, EventArgs e)
         {
             Connection con = new Connection();
-            con.dataGet("Select * from [Users] WHERE username = '" + txt_username.Text.Trim() + "' and password = '" + txt_password.Text.Trim() + "' ");
+            con.dataGet("Select * from [User] WHERE username = '" + txt_username.Text.Trim() + "' and password = '" + txt_password.Text.Trim() + "' ");
             DataTable dt = new DataTable();
             con.sda.Fill(dt);
 
@@ -47,6 +47,11 @@ namespace Payroll
             User.frmChangePassword frmChange = new User.frmChangePassword();
             frmChange.StartPosition = FormStartPosition.CenterScreen;
             frmChange.Show();
+        }
+
+        private void label1_Click(object sender, EventArgs e)
+        {
+
         }
     }
 }
